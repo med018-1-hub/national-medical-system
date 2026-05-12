@@ -1,13 +1,132 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PATIENT
+  DOCTOR
+  ER_STAFF
+  BLOOD_OFFICER
+  PANDEMIC_COORDINATOR
+  ADMIN
+}
+
+enum BloodType {
+  A_POS
+  A_NEG
+  B_POS
+  B_NEG
+  AB_POS
+  AB_NEG
+  O_POS
+  O_NEG
+}
+
+enum AlertSeverity {
+  GREEN
+  YELLOW
+  RED
+}
+
+model User {
+  id               String            @id @default(uuid())
+  nationalId       String            @unique
+  email            String            @unique
+  passwordHash     String
+  role             Role              @default(PATIENT)
+  name             String
+  phone            String?
+  region           String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  emergencyProfile EmergencyProfile?
+  donorRecord      DonorRecord?
+  auditLogs        AuditLog[]
+}
+
+model EmergencyProfile {
+  id                String    @id @default(uuid())
+  userId            String    @unique
+  user              User      @relation(fields: [userId], references: [id])
+  bloodType         BloodType
+  allergies         String[]
+  chronicConditions String[]
+  pastSurgeries     String[]
+  emergencyContact  String?
+  notes             String?
+  updatedAt         DateTime  @updatedAt
+}
+
+model BloodInventory {
+  id           String    @id @default(uuid())
+  hospitalId   String
+  hospitalName String
+  bloodType    BloodType
+  units        Int       @default(0)
+  threshold    Int       @default(10)
+  updatedAt    DateTime  @updatedAt
+
+  @@unique([hospitalId, bloodType])
+}
+
+model DonorRecord {
+  id               String    @id @default(uuid())
+  userId           String    @unique
+  user             User      @relation(fields: [userId], references: [id])
+  bloodType        BloodType
+  lastDonationDate DateTime?
+  region           String
+  isEligible       Boolean   @default(true)
+  totalDonations   Int       @default(0)
+}
+
+model PandemicCase {
+  id             String   @id @default(uuid())
+  outbreakName   String
+  region         String
+  confirmedCount Int
+  activeCount    Int
+  recoveredCount Int
+  deathCount     Int
+  reportedAt     DateTime @default(now())
+  reportedBy     String
+}
+
+model HospitalCapacity {
+  id           String   @id @default(uuid())
+  hospitalId   String   @unique
+  hospitalName String
+  region       String
+  totalBeds    Int
+  occupiedBeds Int
+  icuTotal     Int
+  icuOccupied  Int
+  updatedAt    DateTime @updatedAt
+}
+
+model OutbreakAlert {
+  id          String        @id @default(uuid())
+  title       String
+  description String
+  severity    AlertSeverity
+  region      String?
+  publishedAt DateTime      @default(now())
+  publishedBy String
+  isActive    Boolean       @default(true)
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String?
+  ipAddress String?
+  createdAt DateTime @default(now())
 }
