@@ -1,7 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import authRoutes from './routes/auth.routes';
-import patientRoutes from './routes/patient.routes';
+import authRoutes from './routes/auth';
+import emergencyRoutes from './routes/emergency';
 
 const app: Application = express();
 
@@ -15,8 +15,8 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 // API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/patients', patientRoutes);
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/emergency', emergencyRoutes);
 
 // Global Error Handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

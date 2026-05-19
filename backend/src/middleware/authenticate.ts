@@ -18,6 +18,14 @@ export const authenticate = (req: AuthRequest, res: Response, next: NextFunction
     }
 
     const token = authHeader.split(' ')[1];
+    if (!token) {
+      res.status(401).json({
+        success: false,
+        error: { code: 'UNAUTHORIZED', message: 'No token provided' }
+      });
+      return;
+    }
+
     const decoded = verifyToken(token);
 
     if (!decoded) {
