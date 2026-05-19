@@ -3,6 +3,8 @@ import cors from 'cors';
 import authRoutes from './routes/auth';
 import emergencyRoutes from './routes/emergency';
 import bloodRoutes from './routes/blood';
+import pandemicRoutes from './routes/pandemic';
+import adminRoutes from './routes/admin';
 
 const app: Application = express();
 
@@ -19,6 +21,8 @@ app.get('/health', (req: Request, res: Response) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/emergency', emergencyRoutes);
 app.use('/api/v1/blood', bloodRoutes);
+app.use('/api/v1/pandemic', pandemicRoutes);
+app.use('/api/v1/admin', adminRoutes);
 
 // Global Error Handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

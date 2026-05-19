@@ -7,11 +7,10 @@
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "ignoreDeprecations": "6.0",
+    "module": "Node16",
+    "moduleResolution": "Node16",
     "esModuleInterop": true,
-    "target": "esnext",
+    "target": "ES2022",
     "types": [],
     // For nodejs:
     // "lib": ["esnext"],
