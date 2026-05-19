@@ -5,7 +5,7 @@ import { CustomError } from '../middleware/errorHandler';
 
 export const getByNationalId = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { nationalId } = req.params;
+    const nationalId = typeof req.params['nationalId'] === 'string' ? req.params['nationalId'] : undefined;
     if (!nationalId) {
       const error = new Error('National ID is required') as CustomError;
       error.statusCode = 400;
@@ -54,7 +54,7 @@ export const updateMe = async (req: AuthRequest, res: Response, next: NextFuncti
 
 export const updateById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { id } = req.params; // this is the user's ID
+    const id = typeof req.params['id'] === 'string' ? req.params['id'] : undefined;
     if (!id) {
       const error = new Error('User ID is required') as CustomError;
       error.statusCode = 400;

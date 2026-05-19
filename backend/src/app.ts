@@ -2,6 +2,7 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth';
 import emergencyRoutes from './routes/emergency';
+import bloodRoutes from './routes/blood';
 
 const app: Application = express();
 
@@ -17,6 +18,7 @@ app.get('/health', (req: Request, res: Response) => {
 // API Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/emergency', emergencyRoutes);
+app.use('/api/v1/blood', bloodRoutes);
 
 // Global Error Handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

@@ -120,6 +120,25 @@ model OutbreakAlert {
   isActive    Boolean       @default(true)
 }
 
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  FULFILLED
+}
+
+model BloodRequest {
+  id          String        @id @default(uuid())
+  requestedBy String
+  hospitalId  String
+  bloodType   BloodType
+  units       Int
+  status      RequestStatus @default(PENDING)
+  notes       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
 model AuditLog {
   id        String   @id @default(uuid())
   userId    String
